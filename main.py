@@ -7,17 +7,19 @@ import gc
 import torch
 from transformers import BertConfig, BertTokenizerFast, TrainingArguments, Trainer
 
-
-
 from utils import seed_everything, empty_cuda_cache, compute_metrics
 from modeling import JointBERT
 from data_loader import LoadDataset
 from data_tokenizer import TokenizeDataset
 
 
-TASK = 'atis'
+TASK = 'snips'
+EPOCH = 1
+LR = 5e-5
+BATCH_SIZE = 128
+SEED = 1234
 
-seed_everything(1234)
+seed_everything(SEED)
     
 seq_train = LoadDataset.load_dataset(f'./data/{TASK}/train/seq.in')
 seq_dev = LoadDataset.load_dataset(f'./data/{TASK}/dev/seq.in')
@@ -58,8 +60,8 @@ arguments = TrainingArguments(
     do_train=True,
     do_eval=True,
 
-    num_train_epochs=30,
-    learning_rate = 5e-5,
+    num_train_epochs=EPOCH,
+    learning_rate = LR,
 
     save_strategy="epoch",
     save_total_limit=2,
@@ -68,8 +70,8 @@ arguments = TrainingArguments(
     
     report_to = 'none',
 
-    per_device_train_batch_size=128,
-    per_device_eval_batch_size=32,
+    per_device_train_batch_size=BATCH_SIZE,
+    per_device_eval_batch_size=64,
     gradient_accumulation_steps=1,
     dataloader_num_workers=0,
     fp16=True,
@@ -85,7 +87,7 @@ trainer = Trainer(
 
 empty_cuda_cache()
 trainer.train()
-model.save_pretrained(f"checkpoints/first_checkpoint")
+model.save_pretrained(f"checkpoints/{TASK}_ep{EPOCH}")
 
 intent_label_ids = []
 slot_label_ids = []
@@ -98,9 +100,10 @@ with open(f'./data/{TASK}/test/label', 'r', encoding='utf-8') as intent_f, \
     for line in slot_f:
         line = line.strip().split()
         slot_label_ids.append(line)
+        # slot_label_ids.append(np.array(line))
 
 intent_label_ids = np.array(intent_label_ids)
-slot_label_ids = np.array(slot_label_ids)
+# slot_label_ids = np.array(slot_label_ids)
 
 def predict(model, seqs):
     model.to('cpu')
@@ -123,10 +126,12 @@ def predict(model, seqs):
         slot_logits_clean = slot_logits[0][slot_logits_mask]
         pred_slot_ids.append([slot_idx2word[i.item()] for i in slot_logits_clean.argmax(dim=1)])
 
-    return np.array(pred_intent_ids), np.array(pred_slot_ids)
+    return np.array(pred_intent_ids), pred_slot_ids
 
 pred_intent_ids, pred_slot_ids = predict(model, seq_test)
 
 res = compute_metrics(pred_intent_ids, intent_label_ids, pred_slot_ids, slot_label_ids)
+for k, v in res.items():
+    print(f'============{k}: {v}')
 
 
