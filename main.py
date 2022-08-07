@@ -2,8 +2,6 @@ from collections import defaultdict
 
 import numpy as np
 
-import gc
-
 import torch
 from transformers import BertConfig, BertTokenizerFast, TrainingArguments, Trainer
 
@@ -18,6 +16,11 @@ EPOCH = 1
 LR = 5e-5
 BATCH_SIZE = 128
 SEED = 1234
+print(f'TASK: {TASK}')
+print(f'EPOCH: {EPOCH}')
+print(f'LR: {LR}')
+print(f'BATCH_SIZE: {BATCH_SIZE}')
+print(f'SEED: {SEED}')
 
 seed_everything(SEED)
     
