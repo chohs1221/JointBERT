@@ -97,13 +97,10 @@ with open(f'./data/{TASK}/test/label', 'r', encoding='utf-8') as intent_f, \
     for line in intent_f:
         line = line.strip()
         intent_label_ids.append(line)
+    intent_label_ids = np.array(intent_label_ids)
     for line in slot_f:
         line = line.strip().split()
         slot_label_ids.append(line)
-        # slot_label_ids.append(np.array(line))
-
-intent_label_ids = np.array(intent_label_ids)
-# slot_label_ids = np.array(slot_label_ids)
 
 def predict(model, seqs):
     model.to('cpu')
@@ -111,7 +108,7 @@ def predict(model, seqs):
     pred_slot_ids = []
 
     for i in range(len(seqs)):
-        input_seq = tokenizer(seq_test[i], return_tensors='pt')
+        input_seq = tokenizer(seqs[i], return_tensors='pt')
         
         model.eval()
         with torch.no_grad():
