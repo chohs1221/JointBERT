@@ -1,3 +1,4 @@
+import argparse
 from collections import defaultdict
 
 import numpy as np
@@ -11,11 +12,20 @@ from data_loader import LoadDataset
 from data_tokenizer import TokenizeDataset
 
 
-TASK = 'snips'
-EPOCH = 1
-LR = 5e-5
-BATCH_SIZE = 128
-SEED = 1234
+parser = argparse.ArgumentParser()
+parser.add_argument('--task', default='snips')
+parser.add_argument('--epoch', default=30)
+parser.add_argument('--lr', default=5e-5)
+parser.add_argument('--batch', default=128)
+parser.add_argument('--seed', default=1234)
+args = parser.parse_args()
+
+TASK = args.task
+EPOCH = args.epoch
+LR = args.lr
+BATCH_SIZE = args.batch
+SEED = args.seed
+print('============================================================')
 print(f'TASK: {TASK}')
 print(f'EPOCH: {EPOCH}')
 print(f'LR: {LR}')
