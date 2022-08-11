@@ -14,6 +14,7 @@ from data_tokenizer import TokenizeDataset
 
 
 def main(args):
+    # Parse Argument
     TASK = args.task
     EPOCH = args.epoch
     LR = args.lr
@@ -27,8 +28,12 @@ def main(args):
     print(f'BATCH_SIZE: {BATCH_SIZE}')
     print(f'SEED: {SEED}\n')
 
+
+    # Set Random Seed
     seed_everything(SEED)
-        
+    
+
+    # Load Dataset
     seq_train = LoadDataset.load_dataset(f'./data/{TASK}/train/seq.in')
     seq_dev = LoadDataset.load_dataset(f'./data/{TASK}/dev/seq.in')
     seq_test = LoadDataset.load_dataset(f'./data/{TASK}/test/seq.in')
@@ -43,26 +48,32 @@ def main(args):
     slot_test = LoadDataset.load_dataset(f'./data/{TASK}/test/seq.out', slot = True)
     slot_labels = LoadDataset.load_dataset(f'./data/{TASK}/slot_label_vocab')
 
+
+    # Label Indexing
     intent_word2idx = defaultdict(int, {k: v for v, k in enumerate(intent_labels)})
     intent_idx2word = {v: k for v, k in enumerate(intent_labels)}
 
     slot_word2idx = defaultdict(int, {k: v for v, k in enumerate(slot_labels)})
     slot_idx2word = {v: k for v, k in enumerate(slot_labels)}
 
+
+    # Load Tokenizer & Model
     tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
 
     model_config = BertConfig.from_pretrained("bert-base-uncased", num_labels = len(intent_idx2word), problem_type = "single_label_classification", id2label = intent_idx2word, label2id = intent_word2idx)
-    # model_config.classifier_dropout
 
     model = JointBERT.from_pretrained("bert-base-uncased", config = model_config, intent_labels = intent_labels, slot_labels = slot_labels)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.to(device);
 
 
+    # Tokenize Datasets
     train_dataset = TokenizeDataset(seq_train, intent_train, slot_train, intent_word2idx, slot_word2idx, tokenizer)
     dev_dataset = TokenizeDataset(seq_dev, intent_dev, slot_dev, intent_word2idx, slot_word2idx, tokenizer)
     test_dataset = TokenizeDataset(seq_test, intent_test, slot_test, intent_word2idx, slot_word2idx, tokenizer)
 
+
+    # Set Training Arguments and Train
     arguments = TrainingArguments(
         output_dir='checkpoints',
         do_train=True,
@@ -98,6 +109,9 @@ def main(args):
     model.save_pretrained(f"checkpoints/{TASK}_ep{EPOCH}")
 
     # last_model = JointBERT.from_pretrained("./checkpoints/checkpoint-1050", config = model_config, intent_labels = intent_labels, slot_labels = slot_labels)
+
+
+    # Get Intent, Slot Labels
     intent_label_ids = []
     slot_label_ids = []
 
@@ -111,6 +125,8 @@ def main(args):
             line = line.strip().split()
             slot_label_ids.append(line)
 
+
+    # Predict
     def predict(model, seqs):
         model.to('cpu')
         pred_intent_ids = []
