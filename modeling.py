@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from transformers import BertModel, BertPreTrainedModel
 
@@ -111,7 +112,7 @@ class JointBERT_POS(BertPreTrainedModel):
         classifier_dropout = config.classifier_dropout if config.classifier_dropout is not None else config.hidden_dropout_prob
         
         self.intent_classifier = IntentClassifier(config.hidden_size, self.num_intent_labels, classifier_dropout)
-        self.slot_classifier = SlotClassifier(config.hidden_size, self.num_slot_labels, classifier_dropout)
+        self.slot_classifier = SlotClassifier(config.hidden_size * 2, self.num_slot_labels, classifier_dropout)
 
         # Initialize weights and apply final processing
         self.post_init()
@@ -147,6 +148,7 @@ class JointBERT_POS(BertPreTrainedModel):
         )   # sequence_output, pooled_output, (hidden_states), (attentions)
 
         sequence_output = outputs[0]
+        sequence_output = torch.cat([sequence_output, pos_hidden_states], dim = 2)
         pooled_output = outputs[1]  # [CLS]
 
         intent_logits = self.intent_classifier(pooled_output)
