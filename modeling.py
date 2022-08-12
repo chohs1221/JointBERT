@@ -130,7 +130,9 @@ class JointBERT_POS(BertPreTrainedModel):
         output_attentions = None,
         output_hidden_states = None,
 
-        pos_hidden_states = None,
+        pos_input_ids = None,
+        pos_attention_mask = None,
+        pos_token_type_ids = None,
         # return_dict = None
         ):
         # return_dict = return_dict if return_dict is not None else self.config.use_return_dict
@@ -147,8 +149,25 @@ class JointBERT_POS(BertPreTrainedModel):
             # return_dict=return_dict,
         )   # sequence_output, pooled_output, (hidden_states), (attentions)
 
-        sequence_output = outputs[0]
-        sequence_output = torch.cat([sequence_output, pos_hidden_states], dim = 2)
+        with torch.no_grad():
+            pos_outputs = self.pos_model(
+                pos_input_ids,
+                attention_mask=pos_attention_mask,
+                token_type_ids=pos_token_type_ids,
+            )   # sequence_output, pooled_output, (hidden_states), (attentions)
+
+        sequence_output = outputs[0]    # [Hidden states]
+        pos_hidden_states = torch.squeeze(pos_outputs[0], 1)
+        try:
+            sequence_output = torch.cat([sequence_output, pos_hidden_states], dim = 2)
+        except:
+            print(input_ids)
+            print(pos_input_ids)
+            print(pos_outputs[0].size())
+            print(sequence_output.size())
+            print(pos_hidden_states.size())
+            exit()
+
         pooled_output = outputs[1]  # [CLS]
 
         intent_logits = self.intent_classifier(pooled_output)

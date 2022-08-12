@@ -15,11 +15,11 @@ from data_tokenizer import TokenizeDataset
 
 def main(args):
     # Parse Argument
-    TASK = args.task
-    EPOCH = args.epoch
-    LR = args.lr
-    BATCH_SIZE = args.batch
-    SEED = args.seed
+    TASK = str(args.task)
+    EPOCH = int(args.epoch)
+    LR = float(args.lr)
+    BATCH_SIZE = int(args.batch)
+    SEED = int(args.seed)
     print(f'============================================================')
     print(f"{time.strftime('%c', time.localtime(time.time()))}")
     print(f'TASK: {TASK}')

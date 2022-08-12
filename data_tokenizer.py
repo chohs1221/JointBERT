@@ -41,7 +41,7 @@ class TokenizeDataset:
 
 
 class TokenizeDataset_POS:
-    def __init__(self, seqs, intent_labels, slot_labels, intent_word2idx, slot_word2idx, tokenizer, pos_model, pos_tokenizer):
+    def __init__(self, seqs, intent_labels, slot_labels, intent_word2idx, slot_word2idx, tokenizer, pos_tokenizer):
         self.seqs = seqs
         self.intent_labels = intent_labels
         self.slot_labels = slot_labels
@@ -51,16 +51,12 @@ class TokenizeDataset_POS:
         
         self.tokenizer = tokenizer
         self.pos_tokenizer = pos_tokenizer
-
-        self.pos_model = pos_model
-        
     
     def align_label(self, seq, intent_label, slot_label):
         tokens = self.tokenizer(seq, padding='max_length', max_length=50, truncation=True)
         token_idxs = tokens.word_ids()
         
-        pos_tokens = self.pos_tokenizer(seq, padding='max_length', max_length=50, truncation=True, return_tensors='pt')
-        pos_output = self.pos_model(pos_tokens)[0]
+        pos_tokens = self.pos_tokenizer(seq, padding='max_length', max_length=50, truncation=True)
         
         pre_word_idx = None
         slot_label_ids = []
@@ -79,7 +75,9 @@ class TokenizeDataset_POS:
         tokens['intent_label_ids'] = [self.intent_word2idx[intent_label]]
         tokens['slot_label_ids'] = slot_label_ids
 
-        tokens['pos_hidden_states'] = pos_output
+        tokens['pos_input_ids'] = pos_tokens['input_ids']
+        tokens['pos_attention_mask'] = pos_tokens['attention_mask']
+        tokens['pos_token_type_ids'] = pos_tokens['token_type_ids']
         
         return tokens
 
