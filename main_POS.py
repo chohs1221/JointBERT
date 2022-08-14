@@ -87,9 +87,9 @@ def main(args):
         learning_rate = LR,
 
         save_strategy="epoch",
-        save_total_limit=3,
+        save_total_limit=10,
         evaluation_strategy="epoch",
-        # load_best_model_at_end=True,
+        load_best_model_at_end=True,
         
         report_to = 'none',
 
