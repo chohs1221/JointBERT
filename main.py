@@ -85,7 +85,7 @@ def main(args):
         save_strategy="epoch",
         save_total_limit=2,
         evaluation_strategy="epoch",
-        load_best_model_at_end=True,
+        # load_best_model_at_end=True,
         
         report_to = 'none',
 
