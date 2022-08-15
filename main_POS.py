@@ -20,13 +20,15 @@ def main(args):
     LR = float(args.lr)
     BATCH_SIZE = int(args.batch)
     SEED = int(args.seed)
+    BEST = bool(args.best)
     print(f'============================================================')
     print(f"{time.strftime('%c', time.localtime(time.time()))}")
     print(f'TASK: {TASK}')
     print(f'EPOCH: {EPOCH}')
     print(f'LR: {LR}')
     print(f'BATCH_SIZE: {BATCH_SIZE}')
-    print(f'SEED: {SEED}\n')
+    print(f'SEED: {SEED}')
+    print(f'BEST: {BEST}\n')
 
 
     # Set Random Seed
@@ -66,7 +68,7 @@ def main(args):
     pos_model.to('cuda')
     for param in pos_model.parameters():
         param.requires_grad = False
-        
+
     model_config = BertConfig.from_pretrained("bert-base-uncased", num_labels = len(intent_idx2word), problem_type = "single_label_classification", id2label = intent_idx2word, label2id = intent_word2idx)
     
     model = JointBERT_POS.from_pretrained("bert-base-uncased", config = model_config, intent_labels = intent_labels, slot_labels = slot_labels, pos_model = pos_model)
@@ -91,7 +93,7 @@ def main(args):
         save_strategy="epoch",
         save_total_limit=10,
         evaluation_strategy="epoch",
-        load_best_model_at_end=True,
+        load_best_model_at_end=BEST,
         
         report_to = 'none',
 
@@ -182,6 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr', default=5e-5)
     parser.add_argument('--batch', default=128)
     parser.add_argument('--seed', default=1234)
+    parser.add_argument('--best', default=True)
 
     args = parser.parse_args()
     main(args)
