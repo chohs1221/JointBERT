@@ -121,6 +121,7 @@ def main(args):
             line = line.strip()
             intent_label_ids.append(line)
         intent_label_ids = np.array(intent_label_ids)
+        
         for line in slot_f:
             line = line.strip().split()
             slot_label_ids.append(line)

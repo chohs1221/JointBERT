@@ -31,6 +31,23 @@ class TokenizeDataset:
         tokens['slot_label_ids'] = slot_label_ids
         
         return tokens
+    
+    def align_label(self, seq, intent_label, slot_label):
+        tokens = self.tokenizer(seq, padding='max_length', max_length=50, truncation=True)
+        
+        slot_label_ids = [-100]
+        for word_idx, word in enumerate(seq.split()):
+            word_lenght = len(self.tokenizer.encode(word))
+
+            slot_label_ids.append(self.slot_word2idx[slot_label[word_idx]])
+            slot_label_ids += [-100] * (word_lenght-2)
+        slot_label_ids.append(self.slot_word2idx[slot_label[word_idx]])
+
+        
+        tokens['intent_label_ids'] = [self.intent_word2idx[intent_label]]
+        tokens['slot_label_ids'] = slot_label_ids
+        
+        return tokens
 
     def __getitem__(self, index):
         bert_input = self.align_label(self.seqs[index], self.intent_labels[index], self.slot_labels[index])
