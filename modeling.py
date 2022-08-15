@@ -53,9 +53,7 @@ class JointBERT(BertPreTrainedModel):
         slot_label_ids = None,
         output_attentions = None,
         output_hidden_states = None,
-        # return_dict = None
         ):
-        # return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
         outputs = self.bert(
             input_ids,
@@ -66,11 +64,10 @@ class JointBERT(BertPreTrainedModel):
             inputs_embeds=inputs_embeds,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
-            # return_dict=return_dict,
         )   # sequence_output, pooled_output, (hidden_states), (attentions)
 
-        sequence_output = outputs[0]
-        pooled_output = outputs[1]  # [CLS]
+        sequence_output = outputs[0]    # [Hidden states]
+        pooled_output = outputs[1]      # [CLS]
 
         intent_logits = self.intent_classifier(pooled_output)
         slot_logits = self.slot_classifier(sequence_output)
@@ -92,11 +89,11 @@ class JointBERT(BertPreTrainedModel):
             slot_loss = loss_fct(slot_logits.view(-1, self.num_slot_labels), slot_label_ids.view(-1))
             total_loss += slot_loss
 
-        outputs = ((intent_logits, slot_logits),) + outputs[2:]  # add hidden states and attention if they are here
+        outputs = ((intent_logits, slot_logits),) + outputs[2:]
 
         outputs = (total_loss,) + outputs
 
-        return outputs  # (loss), logits, (hidden_states), (attentions) # Logits is a tuple of intent and slot logits
+        return outputs  # (loss), ((intent logits, slot logits)), (hidden_states), (attentions)
 
 
 class JointBERT_POS(BertPreTrainedModel):
@@ -133,9 +130,7 @@ class JointBERT_POS(BertPreTrainedModel):
         pos_input_ids = None,
         pos_attention_mask = None,
         pos_token_type_ids = None,
-        # return_dict = None
         ):
-        # return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
         outputs = self.bert(
             input_ids,
@@ -146,7 +141,6 @@ class JointBERT_POS(BertPreTrainedModel):
             inputs_embeds=inputs_embeds,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
-            # return_dict=return_dict,
         )   # sequence_output, pooled_output, (hidden_states), (attentions)
 
         with torch.no_grad():
@@ -158,17 +152,9 @@ class JointBERT_POS(BertPreTrainedModel):
 
         sequence_output = outputs[0]    # [Hidden states]
         pos_hidden_states = torch.squeeze(pos_outputs[0], 1)
-        try:
-            sequence_output = torch.cat([sequence_output, pos_hidden_states], dim = 2)
-        except:
-            print(input_ids)
-            print(pos_input_ids)
-            print(pos_outputs[0].size())
-            print(sequence_output.size())
-            print(pos_hidden_states.size())
-            exit()
+        sequence_output = torch.cat([sequence_output, pos_hidden_states], dim = 2)
 
-        pooled_output = outputs[1]  # [CLS]
+        pooled_output = outputs[1]      # [CLS]
 
         intent_logits = self.intent_classifier(pooled_output)
         slot_logits = self.slot_classifier(sequence_output)
@@ -194,4 +180,4 @@ class JointBERT_POS(BertPreTrainedModel):
 
         outputs = (total_loss,) + outputs
 
-        return outputs  # (loss), logits, (hidden_states), (attentions) # Logits is a tuple of intent and slot logits
+        return outputs  # (loss), ((intent logits, slot logits)), (hidden_states), (attentions)
