@@ -5,7 +5,7 @@ from collections import defaultdict
 import numpy as np
 
 import torch
-from transformers import BertConfig, BertTokenizerFast, TrainingArguments, Trainer
+from transformers import BertConfig, BertTokenizer, TrainingArguments, Trainer
 
 from utils import seed_everything, empty_cuda_cache, compute_metrics
 from modeling import JointBERT
@@ -58,13 +58,12 @@ def main(args):
 
 
     # Load Tokenizer & Model
-    tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
     model_config = BertConfig.from_pretrained("bert-base-uncased", num_labels = len(intent_idx2word), problem_type = "single_label_classification", id2label = intent_idx2word, label2id = intent_word2idx)
 
     model = JointBERT.from_pretrained("bert-base-uncased", config = model_config, intent_labels = intent_labels, slot_labels = slot_labels)
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model.to(device);
+    model.to('cuda');
 
 
     # Tokenize Datasets

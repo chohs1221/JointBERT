@@ -8,41 +8,17 @@ class TokenizeDataset:
         self.slot_word2idx = slot_word2idx
         
         self.tokenizer = tokenizer
-    
-    def align_label(self, seq, intent_label, slot_label):
-        tokens = self.tokenizer(seq, padding='max_length', max_length=50, truncation=True)
-        token_idxs = tokens.word_ids()
         
-        pre_word_idx = None
-        slot_label_ids = []
-        for word_idx in token_idxs:
-            if word_idx != pre_word_idx:
-                try:
-                    slot_label_ids.append(self.slot_word2idx[slot_label[word_idx]])
-                except:
-                    slot_label_ids.append(-100)
-
-            elif word_idx == pre_word_idx or word_idx is None:
-                slot_label_ids.append(-100)
-
-            pre_word_idx = word_idx
-        
-        tokens['intent_label_ids'] = [self.intent_word2idx[intent_label]]
-        tokens['slot_label_ids'] = slot_label_ids
-        
-        return tokens
-    
     def align_label(self, seq, intent_label, slot_label):
         tokens = self.tokenizer(seq, padding='max_length', max_length=50, truncation=True)
         
         slot_label_ids = [-100]
         for word_idx, word in enumerate(seq.split()):
-            word_lenght = len(self.tokenizer.encode(word))
-
-            slot_label_ids.append(self.slot_word2idx[slot_label[word_idx]])
-            slot_label_ids += [-100] * (word_lenght-2)
-        slot_label_ids.append(self.slot_word2idx[slot_label[word_idx]])
-
+            slot_label_ids += [self.slot_word2idx[slot_label[word_idx]]] + [-100]*(len(self.tokenizer.tokenize(word))-1)    # [slot label id] + [subword tails padding]
+        if len(slot_label_ids) >= 50:
+            slot_label_ids = slot_label_ids[:49] + [-100]
+        else:
+            slot_label_ids += [-100]*(50-len(slot_label_ids))
         
         tokens['intent_label_ids'] = [self.intent_word2idx[intent_label]]
         tokens['slot_label_ids'] = slot_label_ids
@@ -71,23 +47,16 @@ class TokenizeDataset_POS:
     
     def align_label(self, seq, intent_label, slot_label):
         tokens = self.tokenizer(seq, padding='max_length', max_length=50, truncation=True)
-        token_idxs = tokens.word_ids()
-        
         pos_tokens = self.pos_tokenizer(seq, padding='max_length', max_length=50, truncation=True)
         
-        pre_word_idx = None
-        slot_label_ids = []
-        for word_idx in token_idxs:
-            if word_idx != pre_word_idx:
-                try:
-                    slot_label_ids.append(self.slot_word2idx[slot_label[word_idx]])
-                except:
-                    slot_label_ids.append(-100)
-
-            elif word_idx == pre_word_idx or word_idx is None:
-                slot_label_ids.append(-100)
-
-            pre_word_idx = word_idx
+        slot_label_ids = [-100]
+        for word_idx, word in enumerate(seq.split()):
+            slot_label_ids += [self.slot_word2idx[slot_label[word_idx]]] + [-100]*(len(self.tokenizer.tokenize(word))-1)    # [slot label id] + [subword tails padding]
+        if len(slot_label_ids) >= 50:
+            slot_label_ids = slot_label_ids[:49] + [-100]
+        else:
+            slot_label_ids += [-100]*(50-len(slot_label_ids))
+        
         
         tokens['intent_label_ids'] = [self.intent_word2idx[intent_label]]
         tokens['slot_label_ids'] = slot_label_ids

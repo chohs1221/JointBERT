@@ -5,7 +5,7 @@ from collections import defaultdict
 import numpy as np
 
 import torch
-from transformers import BertConfig, BertTokenizerFast, TrainingArguments, Trainer, AutoTokenizer, AutoModel
+from transformers import BertConfig, BertTokenizer, TrainingArguments, Trainer, AutoTokenizer, AutoModel, BertModel
 
 from utils import seed_everything, empty_cuda_cache, compute_metrics
 from modeling import JointBERT, JointBERT_POS
@@ -58,17 +58,19 @@ def main(args):
 
 
     # Load Tokenizer & Model
-    tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
-    pos_tokenizer = AutoTokenizer.from_pretrained("TweebankNLP/bertweet-tb2_ewt-pos-tagging")
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    pos_tokenizer = BertTokenizer.from_pretrained("vblagoje/bert-english-uncased-finetuned-pos")
 
-    model_config = BertConfig.from_pretrained("bert-base-uncased", num_labels = len(intent_idx2word), problem_type = "single_label_classification", id2label = intent_idx2word, label2id = intent_word2idx)
-
-    pos_model = AutoModel.from_pretrained("TweebankNLP/bertweet-tb2_ewt-pos-tagging")
+    pos_model = BertModel.from_pretrained("vblagoje/bert-english-uncased-finetuned-pos")
     pos_model.eval()
+    pos_model.to('cuda')
+    for param in pos_model.parameters():
+        param.requires_grad = False
+        
+    model_config = BertConfig.from_pretrained("bert-base-uncased", num_labels = len(intent_idx2word), problem_type = "single_label_classification", id2label = intent_idx2word, label2id = intent_word2idx)
+    
     model = JointBERT_POS.from_pretrained("bert-base-uncased", config = model_config, intent_labels = intent_labels, slot_labels = slot_labels, pos_model = pos_model)
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model.to(device);
+    model.to('cuda');
 
 
     # Tokenize Datasets
