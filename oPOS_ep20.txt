@@ -1,0 +1,45 @@
+============================================================
+Mon Aug 15 22:45:20 2022
+TASK: snips
+EPOCH: 20
+LR: 5e-05
+BATCH_SIZE: 128
+SEED: 1234
+BEST: True
+
+{'eval_loss': 0.3083958625793457, 'eval_runtime': 0.8496, 'eval_samples_per_second': 823.948, 'eval_steps_per_second': 12.948, 'epoch': 1.0}
+{'eval_loss': 0.1754239946603775, 'eval_runtime': 0.8228, 'eval_samples_per_second': 850.704, 'eval_steps_per_second': 13.368, 'epoch': 2.0}
+{'eval_loss': 0.16490061581134796, 'eval_runtime': 0.7931, 'eval_samples_per_second': 882.646, 'eval_steps_per_second': 13.87, 'epoch': 3.0}
+{'eval_loss': 0.19253620505332947, 'eval_runtime': 0.7944, 'eval_samples_per_second': 881.146, 'eval_steps_per_second': 13.847, 'epoch': 4.0}
+{'loss': 0.4668, 'learning_rate': 3.79126213592233e-05, 'epoch': 4.85}
+{'eval_loss': 0.15190690755844116, 'eval_runtime': 0.7834, 'eval_samples_per_second': 893.534, 'eval_steps_per_second': 14.041, 'epoch': 5.0}
+{'eval_loss': 0.18327109515666962, 'eval_runtime': 0.7847, 'eval_samples_per_second': 892.066, 'eval_steps_per_second': 14.018, 'epoch': 6.0}
+{'eval_loss': 0.17667841911315918, 'eval_runtime': 0.8054, 'eval_samples_per_second': 869.183, 'eval_steps_per_second': 13.659, 'epoch': 7.0}
+{'eval_loss': 0.20585617423057556, 'eval_runtime': 0.7964, 'eval_samples_per_second': 878.907, 'eval_steps_per_second': 13.811, 'epoch': 8.0}
+{'eval_loss': 0.18295720219612122, 'eval_runtime': 0.7817, 'eval_samples_per_second': 895.496, 'eval_steps_per_second': 14.072, 'epoch': 9.0}
+{'loss': 0.0174, 'learning_rate': 2.5776699029126218e-05, 'epoch': 9.71}
+{'eval_loss': 0.20302368700504303, 'eval_runtime': 0.7865, 'eval_samples_per_second': 889.983, 'eval_steps_per_second': 13.985, 'epoch': 10.0}
+{'eval_loss': 0.20966282486915588, 'eval_runtime': 0.7875, 'eval_samples_per_second': 888.88, 'eval_steps_per_second': 13.968, 'epoch': 11.0}
+{'eval_loss': 0.212408185005188, 'eval_runtime': 0.8054, 'eval_samples_per_second': 869.103, 'eval_steps_per_second': 13.657, 'epoch': 12.0}
+{'eval_loss': 0.21540270745754242, 'eval_runtime': 0.7793, 'eval_samples_per_second': 898.236, 'eval_steps_per_second': 14.115, 'epoch': 13.0}
+{'eval_loss': 0.21582864224910736, 'eval_runtime': 0.7654, 'eval_samples_per_second': 914.58, 'eval_steps_per_second': 14.372, 'epoch': 14.0}
+{'loss': 0.0056, 'learning_rate': 1.3640776699029126e-05, 'epoch': 14.56}
+{'eval_loss': 0.22249077260494232, 'eval_runtime': 0.7684, 'eval_samples_per_second': 910.99, 'eval_steps_per_second': 14.316, 'epoch': 15.0}
+{'eval_loss': 0.22006447613239288, 'eval_runtime': 0.8112, 'eval_samples_per_second': 862.899, 'eval_steps_per_second': 13.56, 'epoch': 16.0}
+{'eval_loss': 0.21534685790538788, 'eval_runtime': 0.79, 'eval_samples_per_second': 886.044, 'eval_steps_per_second': 13.924, 'epoch': 17.0}
+{'eval_loss': 0.21673034131526947, 'eval_runtime': 0.7637, 'eval_samples_per_second': 916.574, 'eval_steps_per_second': 14.403, 'epoch': 18.0}
+{'eval_loss': 0.21786586940288544, 'eval_runtime': 0.7831, 'eval_samples_per_second': 893.88, 'eval_steps_per_second': 14.047, 'epoch': 19.0}
+{'loss': 0.0029, 'learning_rate': 1.5048543689320389e-06, 'epoch': 19.42}
+{'eval_loss': 0.21713587641716003, 'eval_runtime': 0.7596, 'eval_samples_per_second': 921.55, 'eval_steps_per_second': 14.482, 'epoch': 20.0}
+{'train_runtime': 638.5946, 'train_samples_per_second': 409.775, 'train_steps_per_second': 3.226, 'train_loss': 0.11961732486498008, 'epoch': 20.0}
+
+Mon Aug 15 22:56:59 2022
+intent_acc          : 0.9842857142857143
+slot_precision      : 0.9394939493949395
+slot_recall         : 0.9541899441340782
+slot_f1             : 0.9467849223946785
+sementic_frame_acc  : 0.8871428571428571
+============================================================
+
+
+
