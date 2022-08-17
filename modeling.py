@@ -75,12 +75,8 @@ class JointBERT(BertPreTrainedModel):
         total_loss = 0
         # 1. Intent Softmax
         if intent_label_ids is not None:
-            if self.num_intent_labels == 1:
-                intent_loss_fct = nn.MSELoss()
-                intent_loss = intent_loss_fct(intent_logits.squeeze(), intent_label_ids.squeeze())
-            else:
-                intent_loss_fct = nn.CrossEntropyLoss()
-                intent_loss = intent_loss_fct(intent_logits.view(-1, self.num_intent_labels), intent_label_ids.view(-1))
+            intent_loss_fct = nn.CrossEntropyLoss()
+            intent_loss = intent_loss_fct(intent_logits.view(-1, self.num_intent_labels), intent_label_ids.view(-1))
             total_loss += intent_loss
 
         # 2. Slot Softmax
@@ -162,12 +158,8 @@ class JointBERT_POS(BertPreTrainedModel):
         total_loss = 0
         # 1. Intent Softmax
         if intent_label_ids is not None:
-            if self.num_intent_labels == 1:
-                intent_loss_fct = nn.MSELoss()
-                intent_loss = intent_loss_fct(intent_logits.squeeze(), intent_label_ids.squeeze())
-            else:
-                intent_loss_fct = nn.CrossEntropyLoss()
-                intent_loss = intent_loss_fct(intent_logits.view(-1, self.num_intent_labels), intent_label_ids.view(-1))
+            intent_loss_fct = nn.CrossEntropyLoss()
+            intent_loss = intent_loss_fct(intent_logits.view(-1, self.num_intent_labels), intent_label_ids.view(-1))
             total_loss += intent_loss
 
         # 2. Slot Softmax
