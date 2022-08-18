@@ -58,7 +58,7 @@ $ python3 main_POS.py --task {task_name} \
 | ------------------ | :------------: | :---------: | :--------------: | :------------: | :---------: | :--------------: |
 |                    | Intent acc (%) | Slot F1 (%) | Sentence acc (%) | Intent acc (%) | Slot F1 (%) | Sentence acc (%) | 
 | JointBERT          | **98.4**       | **95.7**    | **90.1**         | **97.5**       | 94.4        | 85.1             | 
-| JointBERT with POS | 98.3           | 94.0        | 86.7             | 97.1           | **95.2**    | 86.3             |
+| JointBERT with POS | 98.3           | 94.0        | 86.7             | 97.1           | **95.2**    | **86.3**         |
 
 
 ## References
