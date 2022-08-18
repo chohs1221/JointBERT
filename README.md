@@ -13,7 +13,7 @@
 ## JointBERT with POS tagging Architecture
 
 <p float="left" align="left">
-    <img width="600" src="https://user-images.githubusercontent.com/56873395/185276240-c6d9c392-6c1a-4803-92b5-038b82e93875.jpg" />  
+    <img width="600" src="https://user-images.githubusercontent.com/56873395/185415377-6df600bd-0ca2-484f-87f4-eccd5f5ccb6a.jpg" />  
 </p>
 
 
