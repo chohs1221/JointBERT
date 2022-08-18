@@ -1,6 +1,6 @@
 # JointBERT
 
-`Paper`: [BERT for Joint Intent Classification and Slot Filling](https://arxiv.org/abs/1902.10909)
+`Paper`: [BERT for Joint Intent Classification and Slot Filling](https://arxiv.org/abs/1902.10909)   
 
 
 ## JointBERT Architecture
@@ -44,8 +44,8 @@ $ python3 main.py --task snips \
                   
 # For JointBERT with POS tagging
 $ python3 main_POS.py --task {task_name} \
-                         --epoch {epoch} \
-                    --batch {batch_size} \
+                      --epoch {epoch} \
+                      --batch {batch_size} \
 ```
 
 
@@ -61,3 +61,7 @@ $ python3 main_POS.py --task {task_name} \
 | JointBERT with POS | 98.3           | 94.0        | 86.7             | 97.1           | **95.2**    | 86.3             |
 
 
+## References
+
+- [Huggingface Transformers](https://github.com/huggingface/transformers)
+- [monologg / JointBERT](https://github.com/monologg/JointBERT)
