@@ -2,3 +2,8 @@ __pycache__
 .ipynb_checkpoints
 checkpoints
 data
+test_input
+test_target
+train_input
+train_target
+qwe.ipynb
